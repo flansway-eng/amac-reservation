@@ -109,15 +109,44 @@ drizzle.config.ts
 
 ## Migration SQLite → Turso (déploiement Vercel)
 
-SQLite avec `better-sqlite3` utilise le filesystem local, qui est **éphémère sur Vercel**.  
-Pour déployer en production :
+L'app utilise déjà `@libsql/client` + Drizzle. En local, la base est `data/amac.db`.  
+En production (Vercel), configurez Turso :
 
-1. Créer une base sur [Turso](https://turso.tech) (gratuit jusqu'à 500 bases)
-2. Récupérer `TURSO_DATABASE_URL` et `TURSO_AUTH_TOKEN`
-3. Dans `src/lib/db.ts`, suivre le commentaire `TODO` et remplacer le driver
-4. Migrer les données avec : `turso db shell <db-name> < export.sql`
+### 1. Installer la CLI Turso (Windows PowerShell)
 
-Le data-layer est volontairement isolé dans `src/lib/db.ts` pour faciliter cette migration (~15 min).
+```powershell
+irm https://github.com/tursodatabase/turso/releases/latest/download/turso_cli-installer.ps1 | iex
+turso auth login
+```
+
+### 2. Créer la base
+
+```powershell
+# Script guidé
+.\scripts\turso-setup.ps1
+
+# Ou manuellement
+turso db create amac-reservation
+turso db show amac-reservation --url
+turso db tokens create amac-reservation
+```
+
+### 3. Configurer `.env`
+
+```env
+TURSO_DATABASE_URL=libsql://amac-reservation-<org>.turso.io
+TURSO_AUTH_TOKEN=eyJhbG...
+ADMIN_PIN=2026
+```
+
+### 4. Schéma + données initiales
+
+```powershell
+pnpm db:push:turso   # crée les tables sur Turso
+pnpm db:seed:turso   # pass, menu, catégories
+```
+
+Sans `TURSO_*` dans `.env`, l'app continue d'utiliser SQLite local automatiquement.
 
 ---
 

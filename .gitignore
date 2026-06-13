@@ -20,18 +20,19 @@
 # production
 /build
 
-# misc
-.DS_Store
+# env & secrets — ne jamais pousser sur GitHub
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
 *.pem
+credentials.json
+secrets.json
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
+# template sans secrets (versionné)
+!.env.example
 
 # vercel
 .vercel

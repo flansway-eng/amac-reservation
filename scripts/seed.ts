@@ -1,12 +1,6 @@
-import { createClient } from '@libsql/client';
-import path from 'path';
-import fs from 'fs';
+import { createDbClient } from '../src/lib/db-client';
 
-const dataDir = path.join(process.cwd(), 'data');
-if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-
-const dbPath = path.join(dataDir, 'amac.db');
-const db = createClient({ url: `file:${dbPath}` });
+const db = createDbClient();
 
 async function main() {
   // Création des tables
