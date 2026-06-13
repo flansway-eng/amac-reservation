@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
+import BackButton from '@/components/BackButton';
 import Stepper from '@/components/Stepper';
 import PassCard from '@/components/PassCard';
 import CartSummary from '@/components/CartSummary';
@@ -17,7 +18,7 @@ function buildCart(passLines: CartPassLine[], itemLines: CartItemLine[]): Omit<C
   const totalMenu = itemLines.reduce((s, l) => s + l.sousTotal, 0);
   const creditTotal = passLines.reduce((s, l) => s + l.pass.credit * l.quantite, 0);
   const extraMenu = Math.max(0, totalMenu - creditTotal);
-  return { totalPass, totalMenu, totalGeneral: totalPass + extraMenu, creditTotal };
+  return { totalPass, totalMenu, totalGeneral: extraMenu, creditTotal };
 }
 
 function Confetti() {
@@ -51,7 +52,7 @@ function InvoicePanel({ cart, onGoToStep }: { cart: CartState; onGoToStep: (s: n
     <div className="glass rounded-2xl overflow-hidden">
       {/* Header */}
       <div className="px-4 py-3 border-b border-white/[0.06]"
-        style={{ background: 'linear-gradient(135deg, rgba(232,115,12,0.12), rgba(27,122,61,0.08))' }}>
+        style={{ background: 'linear-gradient(135deg, rgba(255,45,85,0.18), rgba(123,47,247,0.1))' }}>
         <div className="flex items-center gap-2">
           <span className="text-base">🧾</span>
           <span className="text-sm font-black text-white">Facture provisoire</span>
@@ -130,7 +131,7 @@ function InvoicePanel({ cart, onGoToStep }: { cart: CartState; onGoToStep: (s: n
               )}
 
               <div className="flex justify-between items-center pt-2 border-t border-white/10">
-                <span className="text-white font-black">TOTAL</span>
+                <span className="text-white font-black">Total à payer</span>
                 <span className="text-xl font-black" style={{ color: '#E8730C' }}>
                   {formatPrice(cart.totalGeneral)}
                 </span>
@@ -298,9 +299,10 @@ export default function ReserverPage() {
       {showConfetti && <Confetti />}
 
       {/* ── Header sticky ──────────────────────────────────────────────── */}
-      <div className="sticky top-0 z-30 bg-black/85 backdrop-blur border-b border-white/[0.06]">
+      <div className="sticky top-0 z-30 salsa-header">
         <div className="max-w-6xl mx-auto px-3 py-1 flex items-center gap-3">
-          <Image src="/logo-amac.png" alt="AMAC" width={36} height={36} className="object-contain flex-none" />
+          <BackButton href="/" />
+          <Image src="/logo-amac.svg" alt="AMAC" width={36} height={36} className="object-contain flex-none" />
           <div className="flex-1 min-w-0">
             <Stepper steps={STEPS} current={step} />
           </div>
@@ -333,36 +335,35 @@ export default function ReserverPage() {
             {step === 1 && (
               <div>
                 <h2 className="text-2xl font-black text-white mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>
-                  Pré-commandez votre <span className="text-amac-gradient">menu</span>
+                  Pré-commandez votre <span style={{ background: 'linear-gradient(135deg,#E8730C,#FF8A2B)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>menu</span>
                 </h2>
                 <p className="text-white/40 text-sm mb-3">
-                  Optionnel. Votre crédit pass couvre {formatPrice(cart.creditTotal || 0)} de consommations.
+                  Optionnel — crédit disponible : <strong className="text-white">{formatPrice(cart.creditTotal || 0)}</strong>
                 </p>
 
                 {/* Offre BOCK */}
-                <div className="glass-green rounded-xl p-3 mb-4 flex items-center gap-3">
+                <div className="rounded-xl p-3 mb-4 flex items-center gap-3"
+                  style={{ background: 'rgba(27,122,61,0.1)', border: '1px solid rgba(27,122,61,0.3)' }}>
                   <span className="text-xl">🍺</span>
-                  <div>
-                    <p className="text-xs font-bold text-green-400">Offre BOCK × Solibra — 2 achetées = 1 offerte</p>
-                  </div>
+                  <p className="text-xs font-bold" style={{ color: '#22A050' }}>Offre BOCK × Solibra — 2 achetées = 1 offerte</p>
                 </div>
 
                 {/* Recherche */}
-                <input type="text" placeholder="🔍 Rechercher…" value={search}
+                <input type="text" placeholder="🔍 Rechercher un plat ou boisson…" value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full glass rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/25 focus:outline-none focus:ring-1 mb-3"
-                  style={{ '--tw-ring-color': '#E8730C' } as React.CSSProperties}
+                  className="w-full rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none mb-3"
+                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}
                 />
 
                 {/* Chips catégories */}
                 {!search && (
-                  <div className="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-none">
+                  <div className="flex gap-2 overflow-x-auto pb-2 mb-4" style={{ scrollbarWidth: 'none' }}>
                     {displayCats.map((cat) => (
                       <button key={cat.slug} onClick={() => setActiveCatSlug(cat.slug)}
                         className="flex-none rounded-full px-4 py-2 text-xs font-semibold whitespace-nowrap transition-all"
                         style={activeCatSlug === cat.slug
                           ? { background: '#E8730C', color: 'white' }
-                          : { background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.1)' }
+                          : { background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.65)', border: '1px solid rgba(255,255,255,0.1)' }
                         }
                       >
                         {cat.emoji} {cat.nom}
@@ -371,21 +372,147 @@ export default function ReserverPage() {
                   </div>
                 )}
 
-                {/* GRILLE PHOTOS */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {visibleItems.map(({ cat, item }) => (
-                    <MenuItemCard
-                      key={`${item.id}`}
-                      item={item}
-                      catSlug={cat.slug}
-                      lines={getItemLines(item.id)}
-                      onAdd={(itm, vid) => handleItemChange(itm, vid, 1)}
-                      onRemove={(itm, vid) => handleItemChange(itm, vid, -1)}
-                      onVariantClick={(itm) => setVariantModal({ item: itm })}
-                    />
-                  ))}
+                {/* GRILLE PHOTO-CARDS */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+                  {visibleItems.map(({ cat, item }) => {
+                    const CAT_THEMES: Record<string, { from: string; to: string; emoji: string }> = {
+                      saucisses:       { from: '#7C2D12', to: '#C2410C', emoji: '🌭' },
+                      brochettes:      { from: '#431407', to: '#9A3412', emoji: '🍢' },
+                      autres:          { from: '#3B1616', to: '#7F1D1D', emoji: '🍖' },
+                      accompagnements: { from: '#422006', to: '#92400E', emoji: '🍟' },
+                      desserts:        { from: '#500724', to: '#9D174D', emoji: '🍰' },
+                      boissons:        { from: '#0C1A2E', to: '#1E3A5F', emoji: '🥤' },
+                    };
+                    const theme = CAT_THEMES[cat.slug] ?? { from: '#1A1A1A', to: '#333', emoji: '🍽️' };
+                    const lines = getItemLines(item.id);
+                    const qty = lines.reduce((s, l) => s + l.quantite, 0);
+                    const selected = qty > 0;
+                    const isBock = item.nom === 'Bière Bock';
+                    const displayPrice = item.prix !== null
+                      ? formatPrice(item.prix)
+                      : item.variants.length > 0
+                      ? `dès ${formatPrice(Math.min(...item.variants.map((v) => v.prix)))}`
+                      : null;
+
+                    return (
+                      <div key={item.id}
+                        onClick={() => {
+                          if (item.variants.length > 0) setVariantModal({ item });
+                          else handleItemChange(item, null, selected ? -1 : 1);
+                        }}
+                        style={{
+                          borderRadius: 16,
+                          overflow: 'hidden',
+                          cursor: 'pointer',
+                          border: selected ? '2.5px solid #E8730C' : '1px solid rgba(255,255,255,0.09)',
+                          background: 'rgba(255,255,255,0.04)',
+                          boxShadow: selected ? '0 0 0 3px rgba(232,115,12,0.2), 0 8px 24px rgba(232,115,12,0.15)' : 'none',
+                          transform: selected ? 'translateY(-2px)' : 'none',
+                          transition: 'all 0.18s ease',
+                          display: 'flex',
+                          flexDirection: 'column',
+                        }}
+                      >
+                        {/* ZONE PHOTO */}
+                        <div style={{
+                          position: 'relative',
+                          height: 110,
+                          background: `linear-gradient(145deg, ${theme.from}, ${theme.to})`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                          <span style={{ fontSize: 44, filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.6))' }}>
+                            {theme.emoji}
+                          </span>
+
+                          {/* Checkbox coin haut-droite */}
+                          <div style={{
+                            position: 'absolute', top: 8, right: 8,
+                            width: 28, height: 28, borderRadius: '50%',
+                            background: selected ? '#FF2D55' : 'rgba(13,5,24,0.65)',
+                            border: selected ? '2px solid #FF8A2B' : '2px solid rgba(255,255,255,0.4)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            transition: 'all 0.18s ease',
+                          }}>
+                            {selected ? (
+                              <span style={{ color: 'white', fontSize: 15, fontWeight: 900 }}>✓</span>
+                            ) : (
+                              <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12 }}>+</span>
+                            )}
+                          </div>
+
+                          {/* Badge BOCK */}
+                          {isBock && (
+                            <div style={{
+                              position: 'absolute', top: 8, left: 8,
+                              background: '#EAB308', color: 'black', borderRadius: 10,
+                              padding: '2px 7px', fontSize: 9, fontWeight: 900,
+                            }}>2+1 🎁</div>
+                          )}
+
+                          {/* Badge qty si > 1 */}
+                          {selected && qty > 1 && (
+                            <div style={{
+                              position: 'absolute', bottom: 8, right: 8,
+                              background: '#E8730C', color: 'white', borderRadius: 12,
+                              padding: '2px 8px', fontSize: 11, fontWeight: 900,
+                            }}>×{qty}</div>
+                          )}
+                        </div>
+
+                        {/* INFO */}
+                        <div style={{ padding: '10px 12px 12px', flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                          <p style={{ fontSize: 13, fontWeight: 700, color: 'white', lineHeight: 1.3, margin: 0 }}>
+                            {item.nom}
+                          </p>
+                          {item.description && (
+                            <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', lineHeight: 1.3, margin: 0 }}>
+                              {item.description}
+                            </p>
+                          )}
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: 6 }}>
+                            {displayPrice && (
+                              <span style={{ fontSize: 13, fontWeight: 900, color: '#E8730C' }}>{displayPrice}</span>
+                            )}
+                            {/* Stepper pour items simples sélectionnés */}
+                            {!item.variants.length && selected && (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}
+                                onClick={(e) => e.stopPropagation()}>
+                                <button onClick={() => handleItemChange(item, null, -1)}
+                                  style={{ width: 26, height: 26, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)',
+                                    background: 'transparent', color: 'white', fontSize: 16, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                  −
+                                </button>
+                                <span style={{ color: 'white', fontWeight: 900, minWidth: 16, textAlign: 'center', fontSize: 13 }}>{qty}</span>
+                                <button onClick={() => handleItemChange(item, null, 1)}
+                                  style={{ width: 26, height: 26, borderRadius: '50%', border: 'none',
+                                    background: 'rgba(232,115,12,0.7)', color: 'white', fontSize: 16, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                  +
+                                </button>
+                              </div>
+                            )}
+                            {/* Bouton Choisir pour variants */}
+                            {item.variants.length > 0 && (
+                              <button style={{
+                                fontSize: 11, padding: '4px 12px', borderRadius: 20, fontWeight: 700, cursor: 'pointer',
+                                background: selected ? '#E8730C' : 'rgba(232,115,12,0.15)',
+                                color: selected ? 'white' : '#E8730C',
+                                border: selected ? 'none' : '1px solid rgba(232,115,12,0.35)',
+                              }}
+                                onClick={(e) => { e.stopPropagation(); setVariantModal({ item }); }}>
+                                {selected ? '✓ Modifier' : 'Choisir'}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                   {visibleItems.length === 0 && (
-                    <p className="col-span-3 text-center text-white/25 py-8 text-sm">Aucun résultat</p>
+                    <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: 'rgba(255,255,255,0.25)', padding: '32px 0', fontSize: 14 }}>
+                      Aucun résultat
+                    </p>
                   )}
                 </div>
               </div>
@@ -402,7 +529,7 @@ export default function ReserverPage() {
                   <div>
                     <label className="block text-sm font-semibold text-white/60 mb-1.5">Nom complet *</label>
                     <input type="text" value={nom} onChange={(e) => setNom(e.target.value)}
-                      placeholder="Ex : Kouamé Adjé Marie"
+                      placeholder="Rose Amany"
                       className="w-full glass rounded-xl px-4 py-3 text-white placeholder-white/20 focus:outline-none focus:ring-2"
                       style={{ '--tw-ring-color': '#E8730C' } as React.CSSProperties}
                     />
@@ -493,7 +620,7 @@ export default function ReserverPage() {
 
       {/* ── Barre navigation mobile ─────────────────────────────────────── */}
       {step < 3 && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 bg-black/92 backdrop-blur border-t border-white/[0.07] px-4 py-3">
+        <div className="fixed bottom-0 left-0 right-0 z-40 salsa-footer px-4 py-3">
           {/* Mini total mobile */}
           {cart.totalGeneral > 0 && (
             <div className="flex justify-between items-center mb-2 text-xs">
@@ -515,25 +642,29 @@ export default function ReserverPage() {
           <div className="flex gap-2">
             {step > 0 && (
               <button onClick={() => setStep((s) => s - 1)}
-                className="flex-none glass rounded-xl px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-all">
+                className="flex-none rounded-xl px-5 py-3 text-sm font-semibold text-white transition-all"
+                style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}>
                 ← Retour
               </button>
             )}
             {step === 0 && (
               <button onClick={() => setStep(1)} disabled={passLines.length === 0}
-                className="flex-1 rounded-xl py-3 text-sm font-bold disabled:opacity-35 transition-all btn-amac">
+                className="flex-1 rounded-xl py-3 text-sm font-black text-white transition-all disabled:opacity-30"
+                style={{ background: 'linear-gradient(135deg, #E8730C, #FF8A2B)' }}>
                 Continuer → Menu
               </button>
             )}
             {step === 1 && (
               <button onClick={() => setStep(2)}
-                className="flex-1 rounded-xl py-3 text-sm font-bold transition-all btn-amac">
+                className="flex-1 rounded-xl py-3 text-sm font-black text-white transition-all"
+                style={{ background: 'linear-gradient(135deg, #E8730C, #FF8A2B)' }}>
                 {cart.itemLines.length > 0 ? 'Continuer →' : 'Passer cette étape →'}
               </button>
             )}
             {step === 2 && (
               <button onClick={handleSubmit} disabled={submitting}
-                className="flex-1 rounded-xl py-3 text-sm font-bold disabled:opacity-60 transition-all btn-amac">
+                className="flex-1 rounded-xl py-3 text-sm font-black text-white transition-all disabled:opacity-50"
+                style={{ background: 'linear-gradient(135deg, #E8730C, #FF8A2B)' }}>
                 {submitting ? '⏳ Envoi…' : '✓ Confirmer ma réservation'}
               </button>
             )}
@@ -543,7 +674,7 @@ export default function ReserverPage() {
 
       {/* ── Modal variantes ─────────────────────────────────────────────── */}
       {variantModal && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/75 backdrop-blur-sm"
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center salsa-overlay"
           onClick={() => setVariantModal(null)}>
           <div className="w-full sm:max-w-sm glass rounded-t-3xl sm:rounded-2xl p-5 m-0 sm:m-4"
             onClick={(e) => e.stopPropagation()}>
@@ -584,7 +715,7 @@ export default function ReserverPage() {
 
       {/* ── Invoice mobile overlay ───────────────────────────────────────── */}
       {showMobileInvoice && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 backdrop-blur-sm lg:hidden"
+        <div className="fixed inset-0 z-50 flex items-end justify-center salsa-overlay lg:hidden"
           onClick={() => setShowMobileInvoice(false)}>
           <div className="w-full max-h-[70vh] overflow-y-auto glass rounded-t-3xl p-5"
             onClick={(e) => e.stopPropagation()}>

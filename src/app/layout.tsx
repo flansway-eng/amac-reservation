@@ -3,7 +3,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'AMAC Bingerville — Fête Mères & Pères | 18 juin 2026',
-  icons: { icon: '/logo-amac.png', apple: '/logo-amac.png' },
+  icons: { icon: '/logo-amac.svg', apple: '/logo-amac.svg' },
   description:
     'Réservez votre PASS et pré-commandez votre menu pour la Fête combinée des Mères et des Pères de la Section Café Coton — AMAC Bingerville. Rooftop du Capitol Hôtel, Riviera Golf, Abidjan.',
   openGraph: {

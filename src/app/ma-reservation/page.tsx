@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import BackButton from '@/components/BackButton';
 import QRCodeDisplay from '@/components/QRCodeDisplay';
 import { Reservation } from '@/lib/types';
 import { formatPrice, formatDateFR } from '@/lib/utils';
@@ -89,15 +90,13 @@ function MaReservationContent() {
   return (
     <div className="min-h-screen bg-halo pb-12">
       {/* Header */}
-      <div className="sticky top-0 z-20 bg-black/80 backdrop-blur border-b border-white/5 px-4 py-4">
-        <div className="max-w-xl mx-auto flex items-center justify-between">
-          <Link href="/" className="text-xs text-white/30 hover:text-white/60 transition-colors">
-            ← Accueil
-          </Link>
+      <div className="sticky top-0 z-20 salsa-header px-4 py-4">
+        <div className="max-w-xl mx-auto flex items-center justify-between gap-3">
+          <BackButton href="/" />
           <h1 className="text-base font-black text-white" style={{ fontFamily: "'Playfair Display', serif" }}>
             Ma Réservation
           </h1>
-          <div className="w-16" />
+          <div className="w-[72px]" />
         </div>
       </div>
 
@@ -264,19 +263,21 @@ function MaReservationContent() {
 
             {/* Totaux */}
             <div className="glass rounded-2xl p-4 space-y-2 text-sm">
+              {reservation.totalPass > 0 && (
+                <div className="flex justify-between text-white/50">
+                  <span>Pass (hors total)</span><span>{formatPrice(reservation.totalPass)}</span>
+                </div>
+              )}
               {reservation.totalMenu > 0 && (
-                <>
-                  <div className="flex justify-between text-white/50">
-                    <span>Pass</span><span>{formatPrice(reservation.totalPass)}</span>
-                  </div>
-                  <div className="flex justify-between text-white/50">
-                    <span>Menu</span><span>{formatPrice(reservation.totalMenu)}</span>
-                  </div>
-                  <div className="border-t border-white/10 pt-2" />
-                </>
+                <div className="flex justify-between text-white/50">
+                  <span>Menu</span><span>{formatPrice(reservation.totalMenu)}</span>
+                </div>
+              )}
+              {(reservation.totalPass > 0 || reservation.totalMenu > 0) && (
+                <div className="border-t border-white/10 pt-2" />
               )}
               <div className="flex justify-between text-base font-black">
-                <span className="text-white">Total</span>
+                <span className="text-white">Total à payer</span>
                 <span className="text-yellow-400">{formatPrice(reservation.totalGeneral)}</span>
               </div>
               <div className="flex justify-between text-xs text-white/40">

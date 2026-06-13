@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
 
     // Le crédit pass couvre le menu — seul le dépassement est facturé en plus
     const extraMenu = Math.max(0, totalMenu - creditTotal);
-    const totalGeneral = totalPass + extraMenu;
+    const totalGeneral = extraMenu;
 
     // Insertion en transaction
     const result = await db.transaction(async (tx) => {

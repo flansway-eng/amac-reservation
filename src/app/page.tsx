@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import Logo from '@/components/Logo';
+import BackButton from '@/components/BackButton';
 
 const PASS_DATA = [
   { code: 'BRONZE', label: 'Pass Bronze', prix: '5 000', credit: '5 000', color: '#CD7F32', glow: 'rgba(205,127,50,0.35)', emoji: '🥉' },
@@ -10,16 +12,18 @@ const PASS_DATA = [
 export default function LandingPage() {
   return (
     <main className="min-h-screen bg-halo text-white">
+      <div className="px-4 pt-4">
+        <BackButton />
+      </div>
 
       {/* HERO */}
       <section className="relative overflow-hidden px-4 pt-10 pb-14 text-center">
         <div className="pointer-events-none absolute inset-0"
-          style={{ background: 'radial-gradient(ellipse 80% 45% at 50% 0%, rgba(232,115,12,0.13) 0%, transparent 70%)' }} />
+          style={{ background: 'radial-gradient(ellipse 80% 45% at 50% 0%, rgba(255,45,85,0.18) 0%, transparent 70%)' }} />
 
         {/* Logo AMAC */}
         <div className="flex justify-center mb-5">
-          <Image src="/logo-amac.png" alt="AMAC Bingerville — Section Café Coton"
-            width={130} height={130} className="object-contain drop-shadow-[0_0_24px_rgba(232,115,12,0.4)]" priority />
+          <Logo size={130} />
         </div>
 
         <p className="text-xs font-bold tracking-[0.2em] uppercase mb-2" style={{ color: '#1B7A3D' }}>
@@ -60,7 +64,8 @@ export default function LandingPage() {
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
           <Link href="/reserver"
-            className="inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-black text-white animate-amac-pulse btn-amac">
+            className="inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-black text-white animate-amac-pulse"
+            style={{ background: 'linear-gradient(135deg, #FF2D55, #E8730C, #FF8A2B)' }}>
             🎟️ Réserver mon PASS
           </Link>
           <Link href="/menu"
@@ -153,7 +158,7 @@ export default function LandingPage() {
           </ul>
         </div>
         <div className="flex justify-center mt-6">
-          <Image src="/logo-amac.png" alt="AMAC" width={52} height={52} className="object-contain opacity-25" />
+          <Image src="/logo-amac.svg" alt="AMAC" width={52} height={52} className="object-contain opacity-25" />
         </div>
         <p className="text-center text-xs text-white/15 mt-2">
           AMAC Bingerville — Section Café Coton © {new Date().getFullYear()}

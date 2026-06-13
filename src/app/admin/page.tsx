@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import BackButton from '@/components/BackButton';
 import { Reservation } from '@/lib/types';
 import { formatPrice, formatDateFR } from '@/lib/utils';
 
@@ -119,7 +120,11 @@ export default function AdminPage() {
   if (!authenticated) {
     return (
       <div className="min-h-screen bg-halo flex items-center justify-center px-4">
-        <div className="w-full max-w-sm glass rounded-2xl p-8">
+        <div className="w-full max-w-sm">
+          <div className="mb-4">
+            <BackButton href="/" />
+          </div>
+          <div className="glass rounded-2xl p-8">
           <div className="text-center mb-6">
             <p className="text-4xl mb-3">🔐</p>
             <h1 className="text-xl font-black text-white">Administration</h1>
@@ -143,6 +148,7 @@ export default function AdminPage() {
               Accéder
             </button>
           </form>
+          </div>
         </div>
       </div>
     );
@@ -171,11 +177,14 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-halo pb-12">
       {/* Header */}
-      <div className="sticky top-0 z-20 bg-black/90 backdrop-blur border-b border-white/5 px-4 py-3">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <h1 className="text-base font-black text-white">
-            🎛️ Admin — AMAC Bingerville
-          </h1>
+      <div className="sticky top-0 z-20 salsa-header px-4 py-3">
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <BackButton href="/" />
+            <h1 className="text-base font-black text-white truncate">
+              🎛️ Admin — AMAC Bingerville
+            </h1>
+          </div>
           <div className="flex items-center gap-2">
             <button
               onClick={exportCSV}
@@ -275,9 +284,9 @@ export default function AdminPage() {
               onChange={(e) => setFilterStatut(e.target.value as Statut | '')}
               className="glass rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-yellow-500/50 bg-transparent"
             >
-              <option value="" className="bg-black">Tous les statuts</option>
+              <option value="" className="bg-salsa-deep">Tous les statuts</option>
               {STATUT_OPTIONS.map((s) => (
-                <option key={s} value={s} className="bg-black">{STATUT_LABELS[s]}</option>
+                <option key={s} value={s} className="bg-salsa-deep">{STATUT_LABELS[s]}</option>
               ))}
             </select>
           </div>
@@ -315,7 +324,7 @@ export default function AdminPage() {
                       className="text-xs glass rounded-lg px-2 py-1.5 text-white focus:outline-none bg-transparent border border-white/10 disabled:opacity-50"
                     >
                       {STATUT_OPTIONS.map((s) => (
-                        <option key={s} value={s} className="bg-black">{STATUT_LABELS[s]}</option>
+                        <option key={s} value={s} className="bg-salsa-deep">{STATUT_LABELS[s]}</option>
                       ))}
                     </select>
                   </div>

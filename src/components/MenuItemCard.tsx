@@ -83,7 +83,7 @@ export default function MenuItemCard({
 
         {/* Badge non commandable */}
         {!item.commandable && (
-          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-salsa-deep/50 flex items-center justify-center">
             <span className="text-xs text-white/60 font-semibold">Prix sur place</span>
           </div>
         )}

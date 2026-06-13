@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import BackButton from '@/components/BackButton';
 import MenuItemCard from '@/components/MenuItemCard';
 import { MenuCategory } from '@/lib/types';
 
@@ -41,18 +42,16 @@ export default function MenuPage() {
   return (
     <div className="min-h-screen bg-halo pb-20">
       {/* Header */}
-      <div className="sticky top-0 z-20 bg-black/85 backdrop-blur border-b border-white/[0.06] px-4 py-3">
+      <div className="sticky top-0 z-20 salsa-header px-4 py-3">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
+            <BackButton href="/" />
             <Link href="/">
-              <Image src="/logo-amac.png" alt="AMAC" width={36} height={36} className="object-contain" />
+              <Image src="/logo-amac.svg" alt="AMAC" width={36} height={36} className="object-contain" />
             </Link>
-            <div>
-              <Link href="/" className="text-[10px] text-white/30 hover:text-white/60 transition-colors block">← Accueil</Link>
-              <h1 className="text-base font-black text-white leading-none" style={{ fontFamily: "'Playfair Display', serif" }}>
-                🍽️ La Carte
-              </h1>
-            </div>
+            <h1 className="text-base font-black text-white leading-none" style={{ fontFamily: "'Playfair Display', serif" }}>
+              🍽️ La Carte
+            </h1>
           </div>
           <Link href="/reserver" className="rounded-full px-4 py-2 text-xs font-bold text-white btn-amac">
             Réserver →

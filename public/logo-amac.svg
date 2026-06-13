@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8730C"/>
+      <stop offset="100%" stop-color="#C25A06"/>
+    </linearGradient>
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1B7A3D"/>
+      <stop offset="100%" stop-color="#22A050"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer ring (green) -->
+  <circle cx="100" cy="100" r="97" fill="none" stroke="url(#ringGrad)" stroke-width="6"/>
+  <!-- Inner circle (orange) -->
+  <circle cx="100" cy="100" r="86" fill="url(#bgGrad)"/>
+  <!-- Music note -->
+  <text x="100" y="82" text-anchor="middle" font-size="34" fill="rgba(255,255,255,0.25)">🎵</text>
+  <!-- AMAC -->
+  <text x="100" y="115" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="46" letter-spacing="2" fill="white">AMAC</text>
+  <!-- Bingerville -->
+  <text x="100" y="142" text-anchor="middle" font-family="Arial,sans-serif" font-weight="600" font-size="13" letter-spacing="3" fill="rgba(255,255,255,0.75)">BINGERVILLE</text>
+  <!-- Section line -->
+  <line x1="46" y1="152" x2="154" y2="152" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+  <text x="100" y="165" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" letter-spacing="1" fill="rgba(255,255,255,0.45)">SECTION CAFÉ COTON</text>
+</svg>

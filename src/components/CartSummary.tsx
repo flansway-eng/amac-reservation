@@ -104,9 +104,10 @@ export default function CartSummary({ cart, showCreditGauge = false, compact = f
             {formatPrice(cart.totalGeneral)}
           </span>
         </div>
-        {cart.totalMenu > 0 && cart.creditTotal > 0 && (
+        {cart.totalPass > 0 && (
           <p className="text-[10px] text-white/25 text-right">
-            Pass {formatPrice(cart.totalPass)}{extraMenu > 0 ? ` + supplément ${formatPrice(extraMenu)}` : ' · menu inclus'}
+            Pass {formatPrice(cart.totalPass)} à régler séparément
+            {cart.totalMenu > 0 && (extraMenu > 0 ? ` · supplément menu ${formatPrice(extraMenu)}` : ' · menu inclus')}
           </p>
         )}
       </div>
