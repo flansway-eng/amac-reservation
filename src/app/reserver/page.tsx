@@ -164,6 +164,7 @@ export default function ReserverPage() {
   const [passes, setPasses] = useState<Pass[]>([]);
   const [categories, setCategories] = useState<MenuCategory[]>([]);
   const [loading, setLoading] = useState(true);
+  const [apiError, setApiError] = useState(false);
 
   const [passLines, setPassLines] = useState<CartPassLine[]>([]);
   const [itemLines, setItemLines] = useState<CartItemLine[]>([]);
@@ -185,13 +186,16 @@ export default function ReserverPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch('/api/passes').then((r) => r.json()),
-      fetch('/api/menu').then((r) => r.json()),
+      fetch('/api/passes').then((r) => { if (!r.ok) throw new Error('passes'); return r.json(); }),
+      fetch('/api/menu').then((r) => { if (!r.ok) throw new Error('menu'); return r.json(); }),
     ]).then(([p, m]: [Pass[], MenuCategory[]]) => {
       setPasses(p);
       setCategories(m);
       const first = m.find((c) => c.items.some((i) => i.commandable));
       if (first) setActiveCatSlug(first.slug);
+      setLoading(false);
+    }).catch(() => {
+      setApiError(true);
       setLoading(false);
     });
   }, []);
@@ -289,6 +293,26 @@ export default function ReserverPage() {
         <div className="text-center">
           <div className="w-12 h-12 rounded-full border-2 border-t-transparent animate-spin mx-auto mb-3" style={{ borderColor: '#E8730C', borderTopColor: 'transparent' }} />
           <p className="text-white/40 text-sm">Chargement…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (apiError) {
+    return (
+      <div className="min-h-screen bg-halo flex items-center justify-center px-4">
+        <div className="text-center max-w-sm">
+          <p className="text-4xl mb-4">⚙️</p>
+          <h2 className="text-xl font-black text-white mb-2">Base de données non configurée</h2>
+          <p className="text-white/40 text-sm mb-6">
+            Les variables d'environnement <code className="text-orange-400">TURSO_DATABASE_URL</code> et{' '}
+            <code className="text-orange-400">TURSO_AUTH_TOKEN</code> doivent être définies sur Vercel.
+          </p>
+          <a href="https://vercel.com/dashboard" target="_blank" rel="noopener noreferrer"
+            className="inline-block rounded-xl px-6 py-3 text-sm font-bold text-white"
+            style={{ background: 'linear-gradient(135deg, #E8730C, #FF8A2B)' }}>
+            Ouvrir Vercel → Settings → Env Vars
+          </a>
         </div>
       </div>
     );
